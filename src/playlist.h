@@ -1,5 +1,8 @@
-#ifdef PLAYLIST
+#ifndef PLAYLIST
+#define PLAYLIST
+
 #include "album.h"
+
 extern int offset;
 extern int cur_pos;
 extern int play_len;
@@ -10,9 +13,6 @@ extern album **playlist;
 
 int update_playlist (int);
 void free_playlist (void);
+
 #endif
 
-#ifndef PLAYLIST
-#define PLAYLIST
-#include "playlist.c"
-#endif

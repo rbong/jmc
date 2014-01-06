@@ -1,4 +1,9 @@
-#ifdef OPTIONS
+#ifndef OPTIONS
+#define OPTIONS
+
+#include <SDL/SDL.h>
+#include <stdbool.h>
+
 // SDL options
 extern int width;
 extern int height;
@@ -30,9 +35,6 @@ extern char *music_directory;
 
 // external functions
 void parse_opt (char **);
+
 #endif
 
-#ifndef OPTIONS
-#define OPTIONS
-#include "options.c"
-#endif

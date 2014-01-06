@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #include "types.h"
+#include "../options.h"
 
 ID3v2_tag *new_tag(const char *file_name)
 {
