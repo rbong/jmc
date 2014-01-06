@@ -9,7 +9,7 @@ Screen dimensions must be set via the -d option. Press q to quit.
 
 dependencies
 ===
-jmc requires libmpdclient, SDL, and SDL\_gfx
+jmc requires libmpdclient, SDL, SDL\_image, and SDL\_gfx
 
 installation
 ===
