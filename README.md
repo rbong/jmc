@@ -1,7 +1,8 @@
 jmc
 ===
 
-just mpd covers. Type jmc -h or jmc -H for options. Enter q to quit.
+just mpd covers. Type jmc -h or jmc -H for options. Enter q to quit. mpd must
+be playing a song for it to display graphics.
 
 dependencies
 ===
