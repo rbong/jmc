@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "id3v2lib.h"
+#include "../options.h"
 
 
 ID3v2_tag *load_tag(const char *file_name)

@@ -10,17 +10,11 @@
 #ifndef id3v2lib_id3v2lib_h
 #define id3v2lib_id3v2lib_h
 
-#include "id3v2lib/types.h"
-#include "id3v2lib/constants.h"
-#include "id3v2lib/header.h"
-#include "id3v2lib/frame.h"
-#include "id3v2lib/utils.h"
-
-#include "id3v2lib/id3v2lib.c"
-#include "id3v2lib/types.c"
-#include "id3v2lib/header.c"
-#include "id3v2lib/frame.c"
-#include "id3v2lib/utils.c"
+#include "types.h"
+#include "constants.h"
+#include "header.h"
+#include "frame.h"
+#include "utils.h"
 
 ID3v2_tag* load_tag(const char* file_name);
 void remove_tag(const char* file_name);

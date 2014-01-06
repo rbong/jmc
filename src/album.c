@@ -1,6 +1,7 @@
 #include <mpd/client.h> // mpd_song, MPD_*
 #include <SDL/SDL.h> // SDL_Surface
 
+#include "album.h"
 #include "mpd.h" // is_same_tag_mpd
 #include "cover.h" // get_cover
 

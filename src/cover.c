@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <SDL/SDL.h>
+
+#include "cover.h"
 
 #include "options.h" // globals
-#include "cover.h"
 #include "sdl.h"  // load_img_sdl
-#include "mpd.h" // get_path_mpd
-#include "id3v2lib.h" 
+#include "id3v2lib/id3v2lib.h"
 
 // internal function prototypes
 SDL_Surface *load_embedded (const char *);

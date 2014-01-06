@@ -15,6 +15,8 @@
 #include "utils.h"
 #include "constants.h"
 
+#include "../options.h"
+
 ID3v2_frame *parse_frame(char *bytes, int offset, int version, int max)
 {
     ID3v2_frame *frame = new_frame();
