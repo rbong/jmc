@@ -1,7 +1,7 @@
 jmc
 ===
 
-just mpd covers
+just mpd covers. Type jmc -h or jmc -H for options. Enter q to quit.
 
 dependencies
 ===
