@@ -1,6 +1,8 @@
 jmc
 ===
 
+[![fullscreen-screenshot](https://github.com/rbong/jmc/img/screen1.png)]
+
 just mpd covers. Type jmc -h or jmc -H for options. mpd must be playing a song
 for it to display graphics. jmc can be set into fullscreen mode by pressing f.
 Screen dimensions must be set via the -d option. Press q to quit.
