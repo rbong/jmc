@@ -20,6 +20,7 @@ extern long int bg_color;
 extern double root_size_opt;
 extern double size_opt;
 extern double pad_opt;
+extern double y_off_opt;
 extern Uint32 trans;
 
 // globals

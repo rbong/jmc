@@ -36,6 +36,7 @@ long int bg_color = 0;
 double root_size_opt = 0.6;
 double size_opt = 0.8;
 double pad_opt = 0.04;
+double y_off_opt = 0.08;
 Uint32 trans;
 // globals
 char *prog = NULL;
@@ -128,6 +129,12 @@ static const char* (option_usage [] [4]) =
         "t",    "transparency", "[percent]",
         "\tSet the visibility of the reflection using a decimal percentage.\n"
         "\tIf unset it defaults to 0.1. Must be between 0 and 1."
+    },
+    {
+        "y",    "y-off",        "[percent]",
+        "\tSet the amount to bump up the currently-playing-album using a\n"
+        "\tdecimal percentage of general album size. If unset it defaults to\n"
+        "\t0.08."
     },
     {
         "D",    "directory",    "/path/to/music",
@@ -331,6 +338,16 @@ void parse_opt (char **argv)
             if (temp == NULL || ! is_float_string_opt (temp, &pad_opt))
             {
                 print_usage_opt ('p');
+                --argv;
+            }
+        }
+
+        else if (argchar == 'y')
+        {
+            temp = *(++argv);
+            if (temp == NULL || ! is_float_string_opt (temp, &y_off_opt))
+            {
+                print_usage_opt ('y');
                 --argv;
             }
         }

@@ -31,7 +31,7 @@ void draw_classic_mode (SDL_Surface *sur) // take this as an example
 {
     if (cur_pos - offset > play_len || cur_pos - offset < 0)
         return;
-    int root_size, size, pad;
+    int root_size, size, pad, y_off;
     album *root_album = playlist [cur_pos - offset];
     if (root_album == NULL)
         return;
@@ -65,6 +65,10 @@ void draw_classic_mode (SDL_Surface *sur) // take this as an example
         next_offset += extra;
     }
 
+    y_off = y_off_opt * size;
+    if (y_off * 2 > root_size - size)
+        y_off = (root_size - size) / 2;
+
 
     prev_is_nul = false;
     for (int i = prev_offset;
@@ -95,10 +99,10 @@ void draw_classic_mode (SDL_Surface *sur) // take this as an example
     if (root_album->cover != NULL)
     {
         draw_flipped (root_album->cover, sur,
-                root_offset, sur->h/2 - root_size/2 - pad*2, root_size);
+                root_offset, sur->h/2 - root_size/2 - y_off, root_size);
         alpha_mask (sur, sur->h/2 + size/2);
         draw_album (root_album->cover, sur,
-                root_offset, sur->h/2 - root_size/2 - pad*2, root_size);
+                root_offset, sur->h/2 - root_size/2 - y_off, root_size);
     }
     else
         alpha_mask (sur, sur->h/2 + size/2);
@@ -116,15 +120,15 @@ void rect (SDL_Surface *sur, int x, int y, int w, int h, int color)
 
 void alpha_mask (SDL_Surface *sur, int y)
 {
-    SDL_Surface *alpha_mask = SDL_CreateRGBSurface
+    SDL_Surface *alpha = SDL_CreateRGBSurface
         (SDL_SWSURFACE | SDL_ANYFORMAT, sur->w, sur->h, screen_bpp,
          0, 0, 0, 0);
-    SDL_FillRect (alpha_mask, NULL, bg_color);
-    SDL_SetAlpha (alpha_mask, SDL_SRCALPHA, trans);
+    SDL_FillRect (alpha, NULL, bg_color);
+    SDL_SetAlpha (alpha, SDL_SRCALPHA, trans);
 
-    draw_surface_sdl (alpha_mask, sur, 0, y);
+    draw_surface_sdl (alpha, sur, 0, y);
 
-    SDL_FreeSurface (alpha_mask);
+    SDL_FreeSurface (alpha);
 }
 
 void draw_album (SDL_Surface *src, SDL_Surface *dst, int x, int y, int px)
