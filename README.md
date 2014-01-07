@@ -14,14 +14,14 @@ jmc requires libmpdclient, SDL, SDL\_image, and SDL\_gfx
 installation
 ===
 Once you have the dependencies, type
-make
-sudo make install
+    make
+    sudo make install
 
 mpd configuration
 ===
 At the moment, jmc only supports local servers. You should set this option or
 similar in your mpd.conf:
-bind\_to\_address		"~/.mpd/socket"
+    bind\_to\_address		"~/.mpd/socket"
 If you would prefer to use a network server rather than a socket, jmc will
 still work if you set the -D option with the path to your music database.
 You can set the port, host, and timeout manually from jmc, but setting the
