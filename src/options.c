@@ -174,6 +174,10 @@ void parse_opt (char **argv)
     int w = 800, h = 600;
     double reflect = 0.1;
 
+    // temp variables
+    int i, j;
+    double d;
+
     // set program name
     prog = *(argv++);
 
@@ -186,7 +190,7 @@ void parse_opt (char **argv)
         case '\0':
             fprintf (stderr, "%s: unrecognized option %s\n", prog, *argv);
             break;
-        case M:
+        case 'M':
             temp = *(++argv);
             if (temp == NULL || temp [0] == '-')
             {
@@ -196,9 +200,8 @@ void parse_opt (char **argv)
             else
                 host = temp;
             break;
-        case P:
+        case 'P':
             temp  = *(++argv);
-            int i = 0;
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i < 0)
             {
                 print_usage_opt ('P');
@@ -208,9 +211,8 @@ void parse_opt (char **argv)
                 port = i;
 
             break;
-        case T:
+        case 'T':
             temp = *(++argv);
-            int i = 0;
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i < 0)
             {
                 print_usage_opt ('T');
@@ -219,8 +221,7 @@ void parse_opt (char **argv)
             else
                 timeout = i;
             break;
-        case b:
-            int i;
+        case 'b':
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i < 0)
             {
@@ -230,8 +231,7 @@ void parse_opt (char **argv)
             else
                 bufsize = i;
             break;
-        case m:
-            int i;
+        case 'm':
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i <= 0)
             {
@@ -241,8 +241,7 @@ void parse_opt (char **argv)
             else
                 max_size_opt = i;
             break;
-        case w:
-            int i, j;
+        case 'w':
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i <= 0)
             {
@@ -263,8 +262,7 @@ void parse_opt (char **argv)
                 h = j;
             }
             break;
-        case d:
-            int i, j;
+        case 'd':
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i))
             {
@@ -284,7 +282,7 @@ void parse_opt (char **argv)
                 height = j;
             }
             break;
-        case c:
+        case 'c':
             temp = *(++argv);
             if (! is_hex_string_opt (temp, &bg_color))
             {
@@ -292,9 +290,8 @@ void parse_opt (char **argv)
                 --argv;
             }
             break;
-        case a:
+        case 'a':
             temp = *(++argv);
-            double d;
             if (temp == NULL || ! is_float_string_opt (temp, &d) || d < 0)
             {
                 print_usage_opt ('a');
@@ -303,9 +300,8 @@ void parse_opt (char **argv)
             else
                 size_opt = d;
             break;
-        case A:
+        case 'A':
             temp = *(++argv);
-            double d;
             if (temp == NULL || ! is_float_string_opt (temp, &d) || d < 0)
             {
                 print_usage_opt ('A');
@@ -314,7 +310,7 @@ void parse_opt (char **argv)
             else
                 root_size_opt = d;
             break;
-        case p:
+        case 'p':
             temp = *(++argv);
             if (temp == NULL || ! is_float_string_opt (temp, &pad_opt))
             {
@@ -322,7 +318,7 @@ void parse_opt (char **argv)
                 --argv;
             }
             break;
-        case y:
+        case 'y':
             temp = *(++argv);
             if (temp == NULL || ! is_float_string_opt (temp, &y_off_opt))
             {
@@ -330,12 +326,11 @@ void parse_opt (char **argv)
                 --argv;
             }
             break;
-        case V:
+        case 'V':
             verbose = true;
 
-        case t:
+        case 't':
             temp = *(++argv);
-            double d;
             if (! is_float_string_opt (temp, &d) || d > 1 || d < 0)
             {
                 print_usage_opt ('t');
@@ -344,7 +339,7 @@ void parse_opt (char **argv)
             else
                 reflect = d;
             break;
-        case D:
+        case 'D':
             music_directory = *(++argv);
             if (music_directory == NULL || music_directory [0] == '-')
             {
@@ -353,20 +348,21 @@ void parse_opt (char **argv)
                 music_directory = NULL;
             }
             break;
-        case h:
+        case 'h':
             print_usage_opt (ALL_OPT);
             exit (0);
             break;
-        case H:
+        case 'H':
             print_usage_opt (FULL_OPT);
             exit (0);
             break;
-        case v:
+        case 'v':
             printf ("jmc %s\n", version);
             exit (0);
             break;
-        default
+        default:
             fprintf (stderr, "%s: unrecognized option %s\n", prog, *argv);
+            break;
         }
     }
 
