@@ -181,11 +181,12 @@ void parse_opt (char **argv)
     {
         char argchar = get_opt (*argv);
 
-        if (argchar == '\0')
-            fprintf (stderr, "%s: unrecognized option %s\n", prog, *argv);
-
-        else if (argchar == 'M')
+        switch (argchar)
         {
+        case '\0':
+            fprintf (stderr, "%s: unrecognized option %s\n", prog, *argv);
+            break;
+        case M:
             temp = *(++argv);
             if (temp == NULL || temp [0] == '-')
             {
@@ -194,10 +195,8 @@ void parse_opt (char **argv)
             }
             else
                 host = temp;
-        }
-
-        else if (argchar == 'P')
-        {
+            break;
+        case P:
             temp  = *(++argv);
             int i = 0;
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i < 0)
@@ -208,10 +207,8 @@ void parse_opt (char **argv)
             else
                 port = i;
 
-        }
-
-        else if (argchar == 'T')
-        {
+            break;
+        case T:
             temp = *(++argv);
             int i = 0;
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i < 0)
@@ -221,10 +218,8 @@ void parse_opt (char **argv)
             }
             else
                 timeout = i;
-        }
-
-        else if (argchar == 'b')
-        {
+            break;
+        case b:
             int i;
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i < 0)
@@ -234,10 +229,8 @@ void parse_opt (char **argv)
             }
             else
                 bufsize = i;
-        }
-
-        else if (argchar == 'm')
-        {
+            break;
+        case m:
             int i;
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i <= 0)
@@ -247,17 +240,15 @@ void parse_opt (char **argv)
             }
             else
                 max_size_opt = i;
-        }
-
-        else if (argchar == 'w')
-        {
+            break;
+        case w:
             int i, j;
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i) || i <= 0)
             {
                 print_usage_opt ('w');
                 --argv;
-                continue;
+                break;
             }
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &j) || j <= 0)
@@ -271,17 +262,15 @@ void parse_opt (char **argv)
                 w = i;
                 h = j;
             }
-        }
-
-        else if (argchar == 'd')
-        {
+            break;
+        case d:
             int i, j;
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &i))
             {
                 print_usage_opt ('d');
                 --argv;
-                continue;
+                break;
             }
             temp = *(++argv);
             if (temp == NULL || ! is_int_string_opt (temp, &j) || j <= 0)
@@ -294,20 +283,16 @@ void parse_opt (char **argv)
                 width = i;
                 height = j;
             }
-        }
-
-        else if (argchar == 'c')
-        {
+            break;
+        case c:
             temp = *(++argv);
             if (! is_hex_string_opt (temp, &bg_color))
             {
                 print_usage_opt ('c');
                 --argv;
             }
-        }
-
-        else if (argchar == 'a')
-        {
+            break;
+        case a:
             temp = *(++argv);
             double d;
             if (temp == NULL || ! is_float_string_opt (temp, &d) || d < 0)
@@ -317,10 +302,8 @@ void parse_opt (char **argv)
             }
             else
                 size_opt = d;
-        }
-
-        else if (argchar == 'A')
-        {
+            break;
+        case A:
             temp = *(++argv);
             double d;
             if (temp == NULL || ! is_float_string_opt (temp, &d) || d < 0)
@@ -330,33 +313,27 @@ void parse_opt (char **argv)
             }
             else
                 root_size_opt = d;
-        }
-
-        else if (argchar == 'p')
-        {
+            break;
+        case p:
             temp = *(++argv);
             if (temp == NULL || ! is_float_string_opt (temp, &pad_opt))
             {
                 print_usage_opt ('p');
                 --argv;
             }
-        }
-
-        else if (argchar == 'y')
-        {
+            break;
+        case y:
             temp = *(++argv);
             if (temp == NULL || ! is_float_string_opt (temp, &y_off_opt))
             {
                 print_usage_opt ('y');
                 --argv;
             }
-        }
-
-        else if (argchar == 'V')
+            break;
+        case V:
             verbose = true;
 
-        else if (argchar == 't')
-        {
+        case t:
             temp = *(++argv);
             double d;
             if (! is_float_string_opt (temp, &d) || d > 1 || d < 0)
@@ -366,10 +343,8 @@ void parse_opt (char **argv)
             }
             else
                 reflect = d;
-        }
-        
-        else if (argchar == 'D')
-        {
+            break;
+        case D:
             music_directory = *(++argv);
             if (music_directory == NULL || music_directory [0] == '-')
             {
@@ -377,28 +352,22 @@ void parse_opt (char **argv)
                 --argv;
                 music_directory = NULL;
             }
-        }
-
-        else if (argchar == 'h')
-        {
+            break;
+        case h:
             print_usage_opt (ALL_OPT);
             exit (0);
-        }
-
-        else if (argchar == 'H')
-        {
+            break;
+        case H:
             print_usage_opt (FULL_OPT);
             exit (0);
-        }
-
-        else if (argchar == 'v')
-        {
+            break;
+        case v:
             printf ("jmc %s\n", version);
             exit (0);
-        }
-
-        else
+            break;
+        default
             fprintf (stderr, "%s: unrecognized option %s\n", prog, *argv);
+        }
     }
 
     start_client (host, port, timeout);
@@ -573,6 +542,9 @@ int set_music_directory (void)
     {
         fprintf (stderr, "%s: %s\n", prog,
                 mpd_connection_get_error_message (client));
+        fprintf (stderr, "Note: you may need to configure mpd to use sockets"
+                "or set the -D option in this program to your mpd music"
+                "directory manually.\n");
         return 1;
     }
 
