@@ -24,7 +24,7 @@ mpd configuration
 At the moment, jmc only supports local servers. You should set this option or
 similar in your mpd.conf:
 ```
-bind\_to\_address		"~/.mpd/socket"
+bind_to_address		"~/.mpd/socket"
 ```
 If you would prefer to use a network server rather than a socket, jmc will
 still work if you set the -D option with the path to your music database.
