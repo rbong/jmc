@@ -1,5 +1,6 @@
 CC     = gcc
 LIBS   = -lmpdclient -lSDL -lSDL_image -lSDL_gfx 
+OSXLIBS= -lmpdclient -lSDL -lSDL_image -lSDL_gfx -lSDLmain -framework cocoa
 CFLAGS = -std=gnu99 -O3 -Wall
 
 SOURCES = \
@@ -20,6 +21,8 @@ SOURCES = \
 
 all: src/jmc.c
 	$(CC) $(SOURCES) $(LIBS) $(CFLAGS) -o jmc
+osx: src/jmc.c
+	$(CC) $(SOURCES) $(OSXLIBS) $(CFLAGS) -o jmc
 clean:
 	rm -rf jmc
 install:

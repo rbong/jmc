@@ -1,7 +1,7 @@
 jmc
 ===
 
-![fullscreen-screenshot](https://raw.github.com/rbong/jmc/master/img/screen1.png)
+![fullscreen-mode](https://raw.github.com/rbong/jmc/master/img/screen1.png)
 
 just mpd covers. Type jmc -h or jmc -H for options. mpd must be playing a song
 for it to display graphics. jmc can be set into fullscreen mode by pressing f.
@@ -18,6 +18,12 @@ Once you have the dependencies, type
 make
 sudo make install
 ```
+if you are on osx, try
+```
+make osx
+sudo make install
+```
+This is not guaranteed to work.
 
 mpd configuration
 ===
