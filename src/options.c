@@ -328,7 +328,7 @@ void parse_opt (char **argv)
             break;
         case 'V':
             verbose = true;
-
+            break;
         case 't':
             temp = *(++argv);
             if (! is_float_string_opt (temp, &d) || d > 1 || d < 0)
