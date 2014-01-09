@@ -1,4 +1,4 @@
-jmc 0.0.10
+jmc 0.0.11
 ===
 
 ![fullscreen-mode](https://raw.github.com/rbong/jmc/master/img/screen1.png)
@@ -40,7 +40,14 @@ to ensure that these are set automatically.
 
 cover configuration
 ===
-jmc is fairly early in development. Currently jmc only supports embedded id3
-covers in mp3 files. Automatic cover fetching is planned, as is support for
-unembedded local covers. Once automatic cover fetching is implemented, network
-servers will work similar to sockets.
+Currently jmc supports embedded id3 covers in mp3 files and covers in the same
+folder as songs.
+
+planned features
+===
+- Automatic cover fetching (with MusicBrainz and Amazon support)
+- Network server support
+- Cover databases
+- Optional progress bar and album info display
+- Basic controls (song changing, album changing, view modification etc.)
+- Quicker, seamless buffering

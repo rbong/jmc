@@ -19,9 +19,8 @@ typedef int bool;
 
 // general options
 char *music_directory = NULL;
-int bufsize = 10;
+int bufsize = 15;
 bool verbose = false;
-bool local = true;
 // SDL options
 int width = 1366;
 int height = 768;
@@ -38,9 +37,12 @@ double size_opt = 0.8;
 double pad_opt = 0.04;
 double y_off_opt = 0.08;
 Uint32 trans;
+// cover.c options
+bool local = true;
+bool embedded = true;
 // globals
 char *prog = NULL;
-char *version = "0.0.10";
+char *version = "0.0.11";
 int max_path_length = 10000;
 
 // internal funtion prototypes
@@ -86,7 +88,7 @@ static const char* (option_usage [] [4]) =
         "\tsmaller than the number of albums shown on the screen, there will\n"
         "\tbe blank spaces. If it is too large it may take some time to\n"
         "\tcatalog albums, or the program may run out of memory. If unset it\n"
-        "\tdefaults to 10. Must be positive or 0."
+        "\tdefaults to 15. Must be positive or 0."
     },
     {
         "m",    "max",          "[size]",
@@ -141,6 +143,16 @@ static const char* (option_usage [] [4]) =
         "\tSet the folder that the music database is contained in. If unset,\n"
         "\tit assumes that mpd is configured for a local socket and asks the\n"
         "\tserver for the name of the directory."
+    },
+    {
+        "e",    "no-embed",     "(no parameters)",
+        "\tDisable looking for covers inside of ID3 tags. If unset jmc will\n"
+        "\tlook for embedded covers."
+    },
+    {
+        "l",    "no-local",     "(no parameters)",
+        "\tDisable looking for covers inside of folders songs are found in.\n"
+        "\tif unset jmc will look for local covers."
     },
     {
         "V",    "verbose",      "(no parameters)",
@@ -328,6 +340,12 @@ void parse_opt (char **argv)
             break;
         case 'V':
             verbose = true;
+            break;
+        case 'l':
+            local = false;
+            break;
+        case 'e':
+            embedded = false;
             break;
         case 't':
             temp = *(++argv);

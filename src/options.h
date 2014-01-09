@@ -17,7 +17,6 @@ extern struct mpd_connection *client;
 // general options
 extern bool verbose;
 extern int bufsize;
-extern bool local;
 
 // gfx.c options
 extern int max_size_opt;
@@ -27,6 +26,10 @@ extern double size_opt;
 extern double pad_opt;
 extern double y_off_opt;
 extern Uint32 trans;
+
+// cover.c options
+extern bool local;
+extern bool embedded;
 
 // globals
 extern char *prog;
