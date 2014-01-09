@@ -40,7 +40,7 @@ double y_off_opt = 0.08;
 Uint32 trans;
 // globals
 char *prog = NULL;
-char *version = "0.0.1";
+char *version = "0.0.10";
 int max_path_length = 10000;
 
 // internal funtion prototypes

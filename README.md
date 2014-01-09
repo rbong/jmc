@@ -1,4 +1,4 @@
-jmc
+jmc 0.0.10
 ===
 
 ![fullscreen-mode](https://raw.github.com/rbong/jmc/master/img/screen1.png)
