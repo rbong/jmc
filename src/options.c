@@ -347,6 +347,20 @@ void parse_opt (char **argv)
                 --argv;
                 music_directory = NULL;
             }
+            else if
+                (music_directory [(i = strlen (music_directory) - 1)] != '/')
+            {
+                char *s = malloc (sizeof (char) * (i + 2));
+                if (s == NULL)
+                {
+                    fprintf (stderr, "%s: out of space\n", prog);
+                    exit (1);
+                }
+                strcpy (s, music_directory);
+                s [++i] = '/';
+                s [++i] = '\0';
+                music_directory = s;
+            }
             break;
         case 'h':
             print_usage_opt (ALL_OPT);
