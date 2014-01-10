@@ -19,6 +19,7 @@ extern bool verbose;
 extern int bufsize;
 
 // gfx.c options
+extern bool one_mode;
 extern int max_size_opt;
 extern long int bg_color;
 extern double root_size_opt;

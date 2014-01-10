@@ -8,6 +8,7 @@ bool prev_is_nul = false;
 
 // internal function prototypes
 void draw_classic_mode (SDL_Surface *);
+void draw_one_mode (SDL_Surface *);
 void rect (SDL_Surface *, int, int, int, int, int);
 void alpha_mask (SDL_Surface *, int);
 void draw_album (SDL_Surface *, SDL_Surface *, int, int, int);
@@ -19,6 +20,11 @@ void draw_gfx (SDL_Surface *sur)
     clear_gfx (sur);
     if (cur_pos < 0)
         return;
+    if (one_mode)
+    {
+        draw_one_mode (sur);
+        return;
+    }
     draw_classic_mode (sur);
 }
 
@@ -99,6 +105,44 @@ void draw_classic_mode (SDL_Surface *sur) // take this as an example
     }
     else
         alpha_mask (sur, sur->h/2 + size/2);
+}
+
+void draw_one_mode (SDL_Surface *sur)
+{
+    if (cur_pos - offset > play_len || cur_pos - offset < 0)
+        return;
+    int size, y_off;
+    album *a = playlist [cur_pos - offset];
+    next_is_nul = false;
+    prev_is_nul = false;
+    if (a == NULL)
+        return;
+    if (a->next == NULL)
+        next_is_nul = true;
+    if (a->prev == NULL)
+        prev_is_nul = true;
+    if (a->cover == NULL)
+        return;
+
+    if (verbose)
+        printf ("drawing\n");
+
+    if (sur->w < sur->h)
+        size = sur->w * root_size_opt;
+    else
+        size = sur->h * root_size_opt;
+    if (size > max_size_opt)
+        size = max_size_opt;
+
+    int off = sur->w/2 - size/2;
+
+    y_off = y_off_opt * size;
+    if (y_off * 2 > size - size)
+        y_off = (size - size) / 2;
+
+    draw_album (a->cover, sur, off, sur->h/2 - size/2 - y_off, size);
+    draw_flipped (a->cover, sur, off, sur->h/2 - size/2 - y_off, size);
+    alpha_mask (sur, sur->h/2 + size/2);
 }
 
 void rect (SDL_Surface *sur, int x, int y, int w, int h, int color)

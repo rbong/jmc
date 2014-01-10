@@ -30,6 +30,7 @@ SDL_Surface *screen = NULL;
 // mpd options
 struct mpd_connection *client = NULL;
 // gfx.c geometry options
+bool one_mode = false;
 int max_size_opt = 300;
 long int bg_color = 0;
 double root_size_opt = 0.6;
@@ -153,6 +154,10 @@ static const char* (option_usage [] [4]) =
         "l",    "no-local",     "(no parameters)",
         "\tDisable looking for covers inside of folders songs are found in.\n"
         "\tif unset jmc will look for local covers."
+    },
+    {
+        "1",    "one-mode",     "(no parameters)",
+        "\tShow only one album. If unset it defaults to off (classic mode).\n"
     },
     {
         "V",    "verbose",      "(no parameters)",
@@ -350,6 +355,9 @@ void parse_opt (char **argv)
             break;
         case 'e':
             embedded = false;
+            break;
+        case '1':
+            one_mode = true;
             break;
         case 't':
             temp = *(++argv);
