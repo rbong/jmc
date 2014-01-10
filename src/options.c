@@ -42,7 +42,7 @@ bool local = true;
 bool embedded = true;
 // globals
 char *prog = NULL;
-char *version = "0.0.12";
+char *version = "0.0.13";
 int max_path_length = 10000;
 
 // internal funtion prototypes

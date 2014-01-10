@@ -73,6 +73,20 @@ int poll_sdl (void)
                 case SDLK_p:
                     status = mpd_run_toggle_pause (client);
                     break;
+                case SDLK_PLUS:
+                    status = mpd_run_change_volume (client, 10);
+                case SDLK_EQUALS:
+                    status = mpd_run_change_volume (client, 10);
+                    break;
+                case SDLK_KP_PLUS:
+                    status = mpd_run_change_volume (client, 10);
+                    break;
+                case SDLK_MINUS:
+                    status = mpd_run_change_volume (client, -10);
+                    break;
+                case SDLK_KP_MINUS:
+                    status = mpd_run_change_volume (client, -10);
+                    break;
             }
 
             if (!status)

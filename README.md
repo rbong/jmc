@@ -1,12 +1,19 @@
-jmc 0.0.12
+jmc 0.0.13
 ===
 
 ![fullscreen-mode](https://raw.github.com/rbong/jmc/master/img/screen1.png)
 
 just mpd covers. Type jmc -h or jmc -H for options. mpd must be playing a song
-for it to display graphics. jmc can be set into fullscreen mode by pressing f.
-Screen dimensions must be set via the -d option. Press q to quit. Up/down
-change album, left/right change song.
+for it to display graphics.
+
+keys
+===
+- f: toggle fullscreen (set screen dimensions with the -d options)
+- up/down: change album
+- left/right:change song
+- p: toggle pause
+- +/-: volume
+- q: quit
 
 dependencies
 ===
@@ -50,5 +57,4 @@ planned features
 - Network server support
 - Cover databases
 - Optional progress bar and album info display
-- Basic controls (song changing, album changing, view modification etc.)
 - Quicker, seamless buffering
