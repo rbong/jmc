@@ -5,12 +5,14 @@
 #include "mpd.h" // is_same_tag_mpd
 #include "cover.h" // get_cover
 
-album *new_album (album *prev, album *next, struct mpd_song *song)
+album *new_album
+    (album *prev, album *next, struct mpd_song *song, int start, int end)
 {
     album *new = (album *) malloc (sizeof (album));
     new->prev = prev;
     new->next = next;
-    new->len = 1;
+    new->start = end;
+    new->end = end;
     new->cover = get_cover (song);
     if (prev != NULL)
         prev->next = new;

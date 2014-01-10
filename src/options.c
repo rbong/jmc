@@ -42,7 +42,7 @@ bool local = true;
 bool embedded = true;
 // globals
 char *prog = NULL;
-char *version = "0.0.11";
+char *version = "0.0.12";
 int max_path_length = 10000;
 
 // internal funtion prototypes
@@ -241,7 +241,11 @@ void parse_opt (char **argv)
                 --argv;
             }
             else
+            {
                 bufsize = i;
+                if (bufsize < 3)
+                    bufsize = 3;
+            }
             break;
         case 'm':
             temp = *(++argv);

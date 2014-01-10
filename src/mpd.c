@@ -93,5 +93,7 @@ int poll_mpd (void)
         SDL_Flip (screen);
         cur_pos = -1;
     }
+
+    cur_pos = new_pos;
     return 0;
 }

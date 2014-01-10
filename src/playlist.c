@@ -55,7 +55,7 @@ int update_playlist (int new_ver)
         printf ("adding album %s\n",
                 mpd_song_get_tag (root_s, MPD_TAG_ALBUM, 0));
 
-    album *root_a = new_album (NULL, NULL, temp_s);
+    album *root_a = new_album (NULL, NULL, temp_s, offset, offset);
     album *cur_a = root_a;
     album *temp_a = root_a;
     int song_count = 1;
@@ -72,7 +72,7 @@ int update_playlist (int new_ver)
             break;
         if (is_new_album (cur_s, temp_s))
         {
-            cur_a = new_album (NULL, temp_a, cur_s);
+            cur_a = new_album (NULL, temp_a, cur_s, offset, offset);
             if (verbose)
                 printf ("adding album %s\n",
                         mpd_song_get_tag (cur_s, MPD_TAG_ALBUM, 0));
@@ -80,7 +80,7 @@ int update_playlist (int new_ver)
             album_count++;
         }
         else
-            temp_a->len += 1;
+            temp_a->start -= 1;
         song_count++;
         if (temp_s != root_s)
             mpd_song_free (temp_s);
@@ -97,14 +97,13 @@ int update_playlist (int new_ver)
 
     is_last_song = false;
 
-
     // append albums
     while ((cur_s = mpd_run_get_queue_song_pos (client, ++index)) != NULL  &&
             album_count < bufsize)
     {
         if (is_new_album (cur_s, temp_s))
         {
-            cur_a = new_album (temp_a, NULL, cur_s);
+            cur_a = new_album (temp_a, NULL, cur_s, index, index);
             if (verbose)
                 printf ("adding album %s\n",
                         mpd_song_get_tag (cur_s, MPD_TAG_ALBUM, 0));
@@ -112,7 +111,7 @@ int update_playlist (int new_ver)
             album_count++;
         }
         else
-            temp_a->len += 1;
+            temp_a->end += 1;
         song_count++;
         mpd_song_free (temp_s);
         temp_s = cur_s;
@@ -151,7 +150,8 @@ void index_playlist (album *a, int song_count)
 
     while (a != NULL)
     {
-        for (int i = 0; i < a->len; i++)
+        int len = a->end - a->start;
+        for (int i = 0; i <= len; i++)
             playlist [index++] = a;
         a = a->next;
     }

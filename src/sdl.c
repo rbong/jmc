@@ -1,10 +1,12 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_rotozoom.h> // png support
+#include <mpd/client.h> // mpd_*
 
 #include "options.h" // globals
 #include "sdl.h"
 #include "gfx.h" // draw_gfx
+#include "playlist.h" // playlist, offset
 
 int poll_sdl (void)
 {
@@ -17,6 +19,7 @@ int poll_sdl (void)
             return 1;
         else if (event.type == SDL_KEYDOWN)
         {
+            int status = -1;
             int key = event.key.keysym.sym;
             const SDL_VideoInfo *info;
             switch (key)
@@ -48,7 +51,36 @@ int poll_sdl (void)
                     SDL_Flip (screen);
                     SDL_FreeSurface (temp);
                     break;
+                case SDLK_UP:
+                    if (cur_pos >= 0 && playlist [cur_pos - offset] != NULL &&
+                            playlist [cur_pos - offset]->next != NULL)
+                    status = mpd_run_play_pos (client,
+                            playlist [cur_pos - offset]->next->start);
+                    break;
+                case SDLK_DOWN:
+                    if (cur_pos >= 0 && playlist [cur_pos - offset] != NULL &&
+                            playlist [cur_pos - offset]->prev != NULL)
+                    status = mpd_run_play_pos (client,
+                            playlist [cur_pos - offset]->prev->start);
+                    break;
+                    break;
+                case SDLK_LEFT:
+                    status = mpd_run_previous (client);
+                    break;
+                case SDLK_RIGHT:
+                    status = mpd_run_next (client);
+                    break;
+                case SDLK_p:
+                    status = mpd_run_toggle_pause (client);
+                    break;
             }
+
+            if (!status)
+                fprintf (stderr, "%s: mpd error: %s\n", prog,
+                        mpd_connection_get_error_message (client));
+            else if (status == -1)
+                break;
+
         }
         else if (event.type == SDL_VIDEORESIZE)
         {
