@@ -54,16 +54,9 @@ void draw_classic_mode (SDL_Surface *sur) // take this as an example
     }
     pad = size * pad_opt;
 
-    int root_offset = sur->w/2;
-    int prev_offset = root_offset - pad- size;
-    int next_offset = root_offset + pad;
-    if (root_album->cover != NULL)
-    {
-        int extra = root_size/2;
-        root_offset -= extra;
-        prev_offset -= extra;
-        next_offset += extra;
-    }
+    int root_offset = sur->w/2 - root_size/2;
+    int prev_offset = root_offset - pad - size;
+    int next_offset = root_offset + pad + root_size;
 
     y_off = y_off_opt * size;
     if (y_off * 2 > root_size - size)
