@@ -6,7 +6,8 @@
 #include "options.h" // globals
 #include "sdl.h"
 #include "gfx.h" // draw_gfx
-#include "playlist.h" // playlist, offset
+#include "playlist.h" // playlist variable, offset variable
+#include "album.h" // album type
 
 int poll_sdl (void)
 {
@@ -21,6 +22,7 @@ int poll_sdl (void)
         {
             int status = -1;
             int key = event.key.keysym.sym;
+            album *a = NULL;
             const SDL_VideoInfo *info;
             switch (key)
             {
@@ -52,17 +54,32 @@ int poll_sdl (void)
                     SDL_FreeSurface (temp);
                     break;
                 case SDLK_UP:
-                    if (cur_pos >= 0 && playlist [cur_pos - offset] != NULL &&
-                            playlist [cur_pos - offset]->next != NULL)
-                    status = mpd_run_play_pos (client,
-                            playlist [cur_pos - offset]->next->start);
+                    if (cur_pos < 0)
+                        break;
+                    a = playlist [cur_pos - offset];
+                    if (a == NULL)
+                        break;
+                    if (invert)
+                        a = a->prev;
+                    else
+                        a = a->next;
+                    if (a == NULL)
+                        break;
+                    status = mpd_run_play_pos (client, a->start);
                     break;
                 case SDLK_DOWN:
-                    if (cur_pos >= 0 && playlist [cur_pos - offset] != NULL &&
-                            playlist [cur_pos - offset]->prev != NULL)
-                    status = mpd_run_play_pos (client,
-                            playlist [cur_pos - offset]->prev->start);
-                    break;
+                    if (cur_pos < 0)
+                        break;
+                    a = playlist [cur_pos - offset];
+                    if (a == NULL)
+                        break;
+                    if (invert)
+                        a = a->next;
+                    else
+                        a = a->prev;
+                    if (a == NULL)
+                        break;
+                    status = mpd_run_play_pos (client, a->start);
                     break;
                 case SDLK_LEFT:
                     status = mpd_run_previous (client);

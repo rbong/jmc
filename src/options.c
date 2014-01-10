@@ -26,12 +26,13 @@ int width = 1366;
 int height = 768;
 int screen_bpp = 32;
 int screen_flags = SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF;
+bool invert = false;
 SDL_Surface *screen = NULL;
 // mpd options
 struct mpd_connection *client = NULL;
 // gfx.c geometry options
-bool one_mode = false;
 int max_size_opt = 300;
+bool one_mode = false;
 long int bg_color = 0;
 double root_size_opt = 0.6;
 double size_opt = 0.8;
@@ -47,14 +48,14 @@ char *version = "0.0.14";
 int max_path_length = 10000;
 
 // internal funtion prototypes
-bool is_int_string_opt (char *, int *);
-bool is_hex_string_opt (char *, long int *);
-bool is_float_string_opt (char *, double *);
-void print_usage_opt (char);
 int get_opt (char *);
 int start_sdl (int, int, double);
 int set_music_directory (void);
+bool is_int_string_opt (char *, int *);
+bool is_hex_string_opt (char *, long int *);
+bool is_float_string_opt (char *, double *);
 void start_client (char *, unsigned, unsigned);
+void print_usage_opt (char);
 
 // add options here
 static const char* (option_usage [] [4]) =
@@ -160,6 +161,11 @@ static const char* (option_usage [] [4]) =
         "\tShow only one album. If unset it defaults to off (classic mode).\n"
     },
     {
+        "i",    "invert",       "(no parameters)",
+        "\tInvert the next/previous album controls. If unset it defaults to\n"
+        "\toff."
+    },
+    {
         "V",    "verbose",      "(no parameters)",
         "\tPrint excess output during usage. If unset it defaults to off."
     },
@@ -250,6 +256,8 @@ void parse_opt (char **argv)
                 bufsize = i;
                 if (bufsize < 3)
                     bufsize = 3;
+                if (i == 1)
+                    one_mode = true;
             }
             break;
         case 'm':
@@ -359,6 +367,9 @@ void parse_opt (char **argv)
         case '1':
             one_mode = true;
             break;
+        case 'i':
+            invert = true;
+            break;
         case 't':
             temp = *(++argv);
             if (! is_float_string_opt (temp, &d) || d > 1 || d < 0)
@@ -409,6 +420,11 @@ void parse_opt (char **argv)
             break;
         }
     }
+
+    if (! local && ! embedded)
+        fprintf (stderr, "%s: warning:"
+                "disabling all cover grabbing methods\n", prog);
+
 
     start_client (host, port, timeout);
     // post-arg mpd settings
