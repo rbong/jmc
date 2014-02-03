@@ -3,7 +3,12 @@ jmc 0.0.14
 
 ![fullscreen-mode](https://raw.github.com/rbong/jmc/master/img/screen1.png)
 
-just mpd covers. Type jmc -h or jmc -H for options. mpd must be playing a song
+jmc is a client for the mpd music server software. It connect to the server and
+fetches the cover art of albums in the playlist, and then it displays them in a
+pleasing manner based on command line options. Full client capabilities are
+planned.
+
+Type jmc -h or jmc -H for options. mpd must be playing a song
 for it to display graphics.
 
 keys
