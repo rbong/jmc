@@ -12,6 +12,8 @@ dependencies
 ===
 jmc requires libmpdclient, SDL, SDL\_image, and SDL\_gfx
 
+It also requires vim to be compiled with clientserver capabilities.
+
 installation
 ===
 Once you have the dependencies, type
