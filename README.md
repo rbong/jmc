@@ -22,7 +22,7 @@ keys
 
 dependencies
 ===
-jmc requires libmpdclient, SDL, SDL\_image, and SDL\_gfx
+jmc requires libmpdclient and SDL, SDL\_image. SDL\_gfx is no longer required.
 
 installation
 ===

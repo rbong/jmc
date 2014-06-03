@@ -1,6 +1,5 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <SDL/SDL_rotozoom.h> // png support
 #include <mpd/client.h> // mpd_*
 
 #include "options.h" // globals
@@ -8,6 +7,8 @@
 #include "gfx.h" // draw_gfx
 #include "playlist.h" // playlist variable, offset variable
 #include "album.h" // album type
+
+#include "sdl_gfx/SDL_rotozoom.h"
 
 int poll_sdl (void)
 {
@@ -161,7 +162,7 @@ SDL_Surface *scale_surface_sdl (SDL_Surface *sur, int w, int h)
 
     flags = SMOOTHING_ON;
 
-    scaled = rotozoomSurfaceXY (sur, 0, dw, dh, flags);
+    scaled = zoomSurface (sur, dw, dh, flags);
 
     if (scaled == NULL)
     {
