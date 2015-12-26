@@ -21,7 +21,7 @@ int is_same_tag_mpd
     return 1;
 }
 
-char *get_path_mpd (struct mpd_song *song)
+char *get_path_mpd (struct mpd_song *song, char *folder)
 {
     if (song == NULL)
     {
@@ -29,10 +29,15 @@ char *get_path_mpd (struct mpd_song *song)
         return NULL;
     }
 
+    if (folder == NULL)
+    {
+        folder = music_directory;
+    }
+
     const char *s = mpd_song_get_uri (song);
     char *path = malloc (sizeof (char) *
-            (strlen (s) + strlen (music_directory) + 1));
-    strcpy (path, music_directory);
+            (strlen (s) + strlen (folder) + 1));
+    strcpy (path, folder);
     strcat (path, s);
 
     return path;

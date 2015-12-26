@@ -2,13 +2,24 @@
 #include <SDL/SDL_image.h>
 #include <mpd/client.h> // mpd_*
 
+
 #include "options.h" // globals
 #include "sdl.h"
 #include "gfx.h" // draw_gfx
 #include "playlist.h" // playlist variable, offset variable
 #include "album.h" // album type
 
-#include "sdl_gfx/SDL_rotozoom.h"
+#include "sdl_gfx/SDL_rotozoom.h" // needed for zoomSurface
+
+// the matrix used for blurring
+static const long double gaus [] =
+{ 
+    0.05399096651318985, 
+    0.24197072451914536, 
+    0.3989422804014327, 
+    0.24197072451914536, 
+    0.05399096651318985, 
+};
 
 int poll_sdl (void)
 {
@@ -164,6 +175,9 @@ SDL_Surface *scale_surface_sdl (SDL_Surface *sur, int w, int h)
 
     scaled = zoomSurface (sur, dw, dh, flags);
 
+    // REMOVE ME
+    scaled = blur_img_sdl (scaled);
+
     if (scaled == NULL)
     {
         fprintf (stderr, "%s: could not scale image\n", prog);
@@ -211,3 +225,9 @@ SDL_Surface *load_img_sdl (char *s, int size)
 
     return optimized_img;
 }
+
+SDL_Surface *blur_img_sdl (SDL_Surface *sur)
+{
+    SDL_SetAlpha (sur, SDL_SRCALPHA, trans);
+    return sur;
+};

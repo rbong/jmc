@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <string.h> // strlen strcpy strcat strtol strcmp strdup
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include <mpd/client.h> // mpd_*
 #include <SDL/SDL.h> // SDL_*
+#include <SDL/SDL_image.h> // SDL_SaveBMP
 
 // resolve conflicting boolean definitions
 #undef bool
@@ -13,12 +17,16 @@ typedef int bool;
 #include "options.h"
 #include "gfx.h" // clear_gfx
 #include "sdl.h" // finish_sdl
+#include "album.h" // is_new_album
+#include "mpd.h" // get_path_mpd
+#include "cover.h" // get_cover
 
 #define ALL_OPT '\00'
 #define FULL_OPT '\01'
 
 // general options
 char *music_directory = NULL;
+char *dump_directory = NULL;
 int bufsize = 15;
 bool verbose = false;
 // SDL options
@@ -51,6 +59,7 @@ int max_path_length = 10000;
 int get_opt (char *);
 int start_sdl (int, int, double);
 int set_music_directory (void);
+int dump_covers (void);
 bool is_int_string_opt (char *, int *);
 bool is_hex_string_opt (char *, long int *);
 bool is_float_string_opt (char *, double *);
@@ -164,6 +173,11 @@ static const char* (option_usage [] [4]) =
         "i",    "invert",       "(no parameters)",
         "\tInvert the next/previous album controls. If unset it defaults to\n"
         "\toff."
+    },
+    {
+        "u",    "dump",         "/path/to/dump",
+        "\tGets the cover of every item in the database and dumps it to the\n"
+        "\tpath specified. The program then exits."
     },
     {
         "V",    "verbose",      "(no parameters)",
@@ -403,6 +417,29 @@ void parse_opt (char **argv)
                 music_directory = s;
             }
             break;
+        case 'u':
+            dump_directory = *(++argv);
+            if (dump_directory == NULL || dump_directory [0] == '-')
+            {
+                print_usage_opt ('u');
+                --argv;
+                dump_directory = NULL;
+            }
+            else if
+                (dump_directory [(i = strlen (dump_directory) - 1)] != '/')
+            {
+                char *s = malloc (sizeof (char) * (i + 2));
+                if (s == NULL)
+                {
+                    fprintf (stderr, "%s: out of space\n", prog);
+                    exit (1);
+                }
+                strcpy (s, dump_directory);
+                s [++i] = '/';
+                s [++i] = '\0';
+                dump_directory = s;
+            }
+            break;
         case 'h':
             print_usage_opt (ALL_OPT);
             exit (0);
@@ -432,6 +469,11 @@ void parse_opt (char **argv)
         set_music_directory ();
 
     start_sdl (w, h, reflect);
+
+    if (dump_directory != NULL)
+    {
+        exit (dump_covers ());
+    }
 }
 
 // internal functions
@@ -598,9 +640,6 @@ int set_music_directory (void)
     {
         fprintf (stderr, "%s: %s\n", prog,
                 mpd_connection_get_error_message (client));
-        fprintf (stderr, "Note: you may need to configure mpd to use sockets"
-                "or set the -D option in this program to your mpd music"
-                "directory manually.\n");
         return 1;
     }
 
@@ -615,6 +654,7 @@ int set_music_directory (void)
             (music_directory, sizeof (char) * (strlen (music_directory) + 2));
         if (temp != NULL)
             music_directory = temp;
+        // should exit here
         mpd_return_pair (client, pair);
 
         if (music_directory [(length = strlen (music_directory))] != '/')
@@ -632,6 +672,130 @@ int set_music_directory (void)
 
     if (!  (mpd_response_finish (client)
         || mpd_connection_clear_error (client)))
+    {
+        fprintf (stderr, "%s: %s\n", prog,
+                mpd_connection_get_error_message (client));
+        return 1;
+    }
+
+    return 0;
+}
+
+int dump_covers (void)
+{
+    struct mpd_entity *entity = NULL;
+    char *last = NULL;
+
+    if (! mpd_send_list_all (client, NULL))
+    {
+        fprintf (stderr, "%s: %s\n", prog,
+                mpd_connection_get_error_message (client));
+        return 1;
+    }
+
+    while ((entity = mpd_recv_entity (client)) != NULL)
+    {
+        struct mpd_song *song = NULL;
+        SDL_Surface* cover = NULL;
+        char* file = NULL;
+
+        if (mpd_entity_get_type (entity) != MPD_ENTITY_TYPE_SONG)
+        {
+            continue;
+        }
+
+        song = (struct mpd_song *) mpd_entity_get_song (entity);
+        if (song == NULL)
+        {
+            fprintf (stderr, "%s: %s\n", prog,
+                    mpd_connection_get_error_message (client));
+            continue;
+        }
+
+        file = get_path_mpd (song, dump_directory);
+        if (file == NULL)
+            continue;
+
+        // convert filename to folder name
+        int i;
+        for (i = strlen (file) - 1; i > 0 && file [i] != '/'; i--);
+        if (file [i] == '/')
+            file [i + 1] = '\0';
+        else
+        {
+            fprintf (stderr, "%s: not a valid pathname: %s\n", prog, file);
+            free (file);
+            continue;
+        }
+        if (last != NULL && strcmp (file, last) == 0)
+        {
+            free (file);
+            continue;
+        }
+
+        printf ("folder: %s\n", file);
+
+        cover = get_cover (song);
+        if (cover == NULL)
+        {
+            free (file);
+            continue;
+        }
+
+        // create folder if it does not exist
+        struct stat buf = { 0 };
+        if (stat (file, &buf) < 0)
+        {
+            char *cmd = strdup ("mkdir -p ");
+            char *temp = realloc (cmd, sizeof (char) *
+                    (strlen (cmd) + strlen (file) + 3));
+            if (temp != NULL)
+                cmd = temp;
+            else
+                continue;
+            strcat (cmd, "\"");
+            strcat (cmd, file);
+            strcat (cmd, "\"");
+            system (cmd);
+            free (cmd);
+        }
+        char *folder = strdup (file);
+
+        // add cover name to folder name
+        char *temp = realloc (file, sizeof (char) * (strlen (file) + 10));
+        if (temp != NULL)
+            file = temp;
+        else
+        {
+            free (folder);
+            free (file);
+            continue;
+        }
+        strcat (file, "cover.bmp");
+
+        // if (access (fname, F_OK) != -1)
+        // {
+        //     // file exists
+        // }
+
+
+        if (SDL_SaveBMP (cover, file) < 0)
+        {
+            free (folder);
+            fprintf (stderr, "%s: failure saving %s: %s\n",
+                    prog, file, SDL_GetError ());
+        }
+        else
+        {
+            free (last);
+            last = folder;
+        }
+
+        // free (song);
+        free (file);
+        SDL_FreeSurface (cover);
+    }
+    if (mpd_connection_get_error (client) != MPD_ERROR_SUCCESS)
     {
         fprintf (stderr, "%s: %s\n", prog,
                 mpd_connection_get_error_message (client));

@@ -18,7 +18,6 @@ album **playlist = NULL;
 
 void index_playlist (album *, int);
 
-// external functions
 void free_playlist (void)
 {
     if (playlist == NULL)

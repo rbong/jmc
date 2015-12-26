@@ -18,7 +18,7 @@ SDL_Surface *get_cover (struct mpd_song *song)
 {
     if (song == NULL)
         return NULL;
-    char *file = get_path_mpd (song);
+    char *file = get_path_mpd (song, NULL);
     SDL_Surface *sur = NULL;
 
     if (local)
@@ -102,16 +102,17 @@ SDL_Surface *load_local (const char *file)
     if (file == NULL)
         return NULL;
 
-    char *folder = trim_path (file);
+    char *folder = trim_path ((char *) file);
 
     if (folder == NULL)
         return NULL;
 
     SDL_Surface *sur = NULL;
-    int len = 9;
+    int len = 12;
     char name [] [11] = {   "cover.png", "front.png", "folder.png",
                             "cover.jpg", "front.jpg", "folder.jpg",
-                            "cover.gif", "front.gif", "folder.gif" };
+                            "cover.gif", "front.gif", "folder.gif",
+                            "cover.bmp", "front.bmp", "folder.bmp", };
     char s [11 + strlen (folder)];
     int i = 0;
 
@@ -123,6 +124,11 @@ SDL_Surface *load_local (const char *file)
         if (access (s, F_OK) == 0)
         {
             sur = load_img_sdl (s, -1);
+            // REMOVE ME
+            printf ("blurring...\n");
+            sur = blur_img_sdl (sur);
+            printf ("done.\n");
+            // REMOVE ME
             break;
         }
     }

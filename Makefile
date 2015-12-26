@@ -1,7 +1,7 @@
 CC     = gcc
-LIBS   = -lmpdclient -lSDL -lSDL_image -lSDL_gfx 
-OSXLIBS= -lmpdclient -lSDL -lSDL_image -lSDL_gfx -lSDLmain -framework cocoa
-CFLAGS = -std=gnu99 -O3 -Wall
+LIBS   = -lmpdclient -lSDL -lSDL_image -lm
+OSXLIBS= -lmpdclient -lSDL -lSDL_image -lm -lSDL_gfx -lSDLmain -framework cocoa
+CFLAGS = -std=gnu99 -Wall
 DBUGFL = -g
 
 SOURCES = \
@@ -10,6 +10,7 @@ SOURCES = \
 	src/id3v2lib/types.c \
 	src/id3v2lib/utils.c \
 	src/id3v2lib/id3v2lib.c \
+	src/sdl_gfx/SDL_rotozoom.c \
 	src/album.c \
 	src/cover.c \
 	src/gfx.c \
